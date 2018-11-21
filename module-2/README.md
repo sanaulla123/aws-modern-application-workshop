@@ -94,7 +94,8 @@ curl http://localhost:8088/misfits
 
 You should see all of the misfits.
 
-### Pushing the Docker Image to Amazon ECR
+
+#### Pushing the Docker Image to Amazon ECR
 
 With a successful test of our service locally, we're ready to create a container image repository in Amazon Elastic Container Registry (Amazon ECR) and push our image into it.  In order to create the registry, run the following command, this creates a new repository in the default AWS ECR registry created for your account.
 
@@ -112,7 +113,7 @@ $(aws ecr get-login --no-include-email)
 Next, push the image you created to the ECR repository using the copied tag from above. Using this command, docker will push your image and all the images it depends on to Amazon ECR:
 
 ```
-docker push 111111111111.dkr.ecr.us-east-1.amazonaws.com/mythicalmysfits/service:latest
+docker push aws-modern-application-workshop
 ```
 
 Run the following command to see your newly pushed docker image stored inside the ECR repository:
