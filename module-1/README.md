@@ -56,7 +56,7 @@ When the IDE has finished being created for you, you'll be presented with a welc
 In the bottom panel of your new Cloud9 IDE, you will see a terminal command line terminal open and read to use.  Run the following git command in the terminal to clone the necessary code to complete this tutorial:
 
 ```
-git clone https://github.com/aws-samples/aws-modern-application-workshop.git
+git clone -b go https://github.com/aws-samples/aws-modern-application-workshop.git
 ```
 
 After cloning the repository, you'll see that your project explorer now includes the files cloned:
@@ -88,7 +88,7 @@ aws s3 website s3://mythical-mysfits-bucket-name --index-document index.html
 
 #### Update the S3 Bucket Policy
 
-All buckets created in Amazon S3 are fully private by default.  In order to be used as a public website, we need to create an S3 **Bucket Policy** that indicates objects stored within this new bucket may be publicly accessed by anyone. Bucket policies are represented as JSON documents that define the S3 *Actions* (S3 API calls) that are allowed (or not not allowed) to be performed by different *Principals* (in our case the public, or anyone). The JSON document for the necessary bucket policy is located at: `/~/environment/aws-modern-application-workshop/module-1/aws-cli/bucket-policy.json`.  This file includes several places that you need to change to use the new bucket name you've created (indicated with `REPLACE_ME`).
+All buckets created in Amazon S3 are fully private by default.  In order to be used as a public website, we need to create an S3 **Bucket Policy** that indicates objects stored within this new bucket may be publicly accessed by anyone. Bucket policies are represented as JSON documents that define the S3 *Actions* (S3 API calls) that are allowed (or not not allowed) to be performed by different *Principals* (in our case the public, or anyone). The JSON document for the necessary bucket policy is located at: `/~/environment/aws-modern-application-workshop/module-1/aws-cli/website-bucket-policy.json`.  This file contains one place where you must change to use the new bucket name you've created (replace `mythical-mysfits-bucket-name`).
 
 Execute the following CLI command to add a public bucket policy to your website:
 
@@ -98,15 +98,15 @@ aws s3api put-bucket-policy --bucket mythical-mysfits-bucket-name --policy file:
 
 #### Publish the Website Content to S3
 
-Now that our new website bucket is configured appropriately, let's add the first iteration of the Mythical Mysfits homepage to the bucket.  Use the following S3 CLI command that mimics the linux command for copying files (**cp**) to copy the provided index.html page locally from your IDE up to the new S3 bucket (replacing the bucket name appropriately).
+Now that our new website bucket is configured appropriately, let's add the first iteration of the Mythical Mysfits homepage to the bucket.  Use the following S3 CLI command that mimics the linux command for copying files (**cp**) to copy the provided index.html page locally from your IDE up to the new S3 bucket (replacing `mythical-mysfits-bucket-name` appropriately).
 
 ```
-aws s3 cp ~/environment/aws-modern-application-workshop/module-1/web/index.html s3://YOUR_BUCKET_NAME/index.html
+aws s3 cp ~/environment/aws-modern-application-workshop/module-1/web/index.html s3://mythical-mysfits-bucket-name/index.html
 ```
 
 Now, open up your favorite web browser and enter the below into the address bar. The string to replace YOUR_REGION should match whichever region you created, the possible region strings are listed above at the beginning of this modules instructions (eg: us-east-1):
 
-http://REPLACE_ME_OUR_BUCKET_NAME.s3-website-REPLACE_ME_YOUR_REGION.amazonaws.com
+http://mythical-mysfits-bucket-name.s3-website-REPLACE_ME_YOUR_REGION.amazonaws.com
 
 ![mysfits-welcome](/images/module-1/mysfits-welcome.png)
 

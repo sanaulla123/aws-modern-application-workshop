@@ -20,7 +20,7 @@
 
 ### Overview
 
-In Module 2, you will create a new microservice hosted with AWS Fargate on Amazon Elastic Container Service so that your Mythical Mysfits website can have a application backend to integrate with. AWS Fargate is a deployment option in Amazon ECS that allows you to deploy containers without having to manage any clusters or servers. For our Mythical Mysfits backend, we will use Python and create a Flask app in a Docker container behind a Network Load Balancer. These will form the microservice backend for the frontend website to integrate with.
+In Module 2, you will create a new microservice hosted with AWS Fargate on Amazon Elastic Container Service so that your Mythical Mysfits website can have a application backend to integrate with. AWS Fargate is a deployment option in Amazon ECS that allows you to deploy containers without having to manage any clusters or servers. For our Mythical Mysfits backend, we will use Go and create a Go app in a Docker container behind a Network Load Balancer. These will form the microservice backend for the frontend website to integrate with.
 
 ### Creating the Core Infrastructure using AWS CloudFormation
 
@@ -49,13 +49,11 @@ Once you see `CREATE_COMPLETE` in the `describe-stacks` response command above, 
 
 ## Module 2a: Deploying a Service with AWS Fargate
 
-### Creating a Flask Service Container
+### Building A Docker Image
 
-#### Building A Docker Image
+Next, you will create a docker container image that contains all of the code and configuration required to run the Mythical Mysfits backend as a microservice API created with Go.  We will build the docker container image within Cloud9 and then push it to the Amazon Elastic Container Registry, where it will be available to pull when we create our service using Fargate.
 
-Next, you will create a docker container image that contains all of the code and configuration required to run the Mythical Mysfits backend as a microservice API created with Flask.  We will build the docker container image within Cloud9 and then push it to the Amazon Elastic Container Registry, where it will be available to pull when we create our service using Fargate.
-
-All of the code required to run our service backend is stored within the `/module-2/app/` directory of the repository you've cloned into your Cloud9 IDE.  If you would like to review the Python code that uses Flask to create the service API, view the `/module-2/app/service/mythicalMysfitsService.py` file.
+All of the code required to run our service backend is stored within the `/module-2/app/` directory of the repository you've cloned into your Cloud9 IDE.  If you would like to review the Go code to create the service API, view the `/module-2/app/service/mythicalMysfitsService.go` file.
 
 Docker comes already installed on the Cloud9 IDE that you've created, so in order to build the docker image locally, all we need to do is run the following commands in the Cloud9 terminal:
 
@@ -68,43 +66,35 @@ cd ~/environment/aws-modern-application-workshop/module-2/app
 * Then build the docker image, this will use the file in the current directory called Dockerfile that tells Docker all of the instructions that should take place when the build command is executed. Replace the contents in and the {braces} below with the appropriate information from the account/region you're working in:
 
 ```
-docker build . -t REPLACE_ME_AWS_ACCOUNT_ID.dkr.ecr.REPLACE_ME_REGION.amazonaws.com/mythicalmysfits/service:latest
+docker build -t aws-modern-application-workshop .
 ```
 
 You will see docker download and install all of the necessary dependency packages that our application needs, and output the tag for the built image.  Copy the image tag for later reference.
 
 ```
-Successfully built 8bxxxxxxxxab
-Successfully tagged 111111111111.dkr.ecr.us-east-1.amazonaws.com/mythicalmysfits/service:latest
+Successfully built xxxxxxxxxxxx
+Successfully tagged aws-modern-application-workshop:latest
 ```
 
-#### Testing the Service Locally
+### Testing the Service Locally
 
-Let's test our image locally within Cloud9 to make sure everything is operating as expected. Copy the image tag that resulted from the previous camm and run the following command to deploy the container “locally” (which is actually within your Cloud9 IDE inside AWS!):
-
-```
-docker run -p 8080:8080 111111111111.dkr.ecr.us-east-1.amazonaws.com/mythicalmysfits/service:latest
-```
-
-As a result you will see docker reporting that your container is up and running locally:
+Let's test our image locally within Cloud9 to make sure everything is operating as expected. Copy the image tag that resulted from the previous command and run the following command to deploy the container “locally” (which is actually within your Cloud9 IDE inside AWS!):
 
 ```
- * Running on http://0.0.0.0:8080/ (Press CTRL+C to quit)
+docker run -p 8088:8088 -it --rm --name mythical-mysfits-service aws-modern-application-workshop
 ```
 
-To test our service with a local request, we're going to open up the build-in web browser within the Cloud9 IDE that can be used to preview applications that are running on the IDE instance.  To open the preview web browser, select **Preview > Preview Running Application** in the Cloud9 menu bar:
+The server does not show any output by default,
+but you can see that it's working by issuing the following `curl` command from another terminal
+(Alt-T):
 
-![preview-menu](/images/module-2/preview-menu.png)
+```
+curl http://localhost:8088/misfits
+```
 
-This will open another panel in the IDE where the web browser will be available.  Append /mysfits to the end of the URI in the address bar of the preview browser and hit enter:
+You should see all of the misfits.
 
-![preview-menu](/images/module-2/address-bar.png)
-
-If successful you will see a response from the service that returns the JSON document stored at `/aws-modern-application-workshop/module-2/app/service/mysfits-response.json`
-
-When done testing the service you can stop it by pressing CTRL-c on PC or ⌘-c on Mac.
-
-#### Pushing the Docker Image to Amazon ECR
+### Pushing the Docker Image to Amazon ECR
 
 With a successful test of our service locally, we're ready to create a container image repository in Amazon Elastic Container Registry (Amazon ECR) and push our image into it.  In order to create the registry, run the following command, this creates a new repository in the default AWS ECR registry created for your account.
 
@@ -233,7 +223,7 @@ Copy the DNS name you saved when creating the NLB and send a request to it using
 http://mysfits-nlb-123456789-abc123456.elb.us-east-1.amazonaws.com/mysfits
 ```
 
-A response showing the same JSON response we received earlier when testing the docker container locally in Cloud9 means your Flask API is up and running on AWS Fargate.
+A response showing the same JSON response we received earlier when testing the docker container locally in Cloud9 means your Go code is up and running on AWS Fargate.
 
 ### Update Mythical Mysfits to Call the NLB
 
@@ -255,7 +245,7 @@ To upload this file to your S3 hosted website, use the bucket name again that wa
 aws s3 cp ~/environment/aws-modern-application-workshop/module-2/web/index.html s3://INSERT-YOUR-BUCKET-NAME/index.html
 ```
 
- Open your website using the same URL used at the end of Module 1 in order to see your new Mythical Mysfits website, which is retrieving JSON data from your Flask API running within a docker container deployed to AWS Fargate!
+ Open your website using the same URL used at the end of Module 1 in order to see your new Mythical Mysfits website, which is retrieving JSON data from your Go code running within a docker container deployed to AWS Fargate!
 
 
 ## Module 2b: Automating Deployments using AWS Code Services
@@ -267,7 +257,7 @@ aws s3 cp ~/environment/aws-modern-application-workshop/module-2/web/index.html 
 
 #### Create a S3 Bucket for Pipelie Artifacts
 
-Now that you have a service up and running, you may think of code changes that you'd like to make to your Flask service.  It would be a bottleneck for your development speed if you had to go through all of the same steps above every time you wanted to deploy a new feature to your service. That's where Continuous Integration and Continuous Delivery or CI/CD come in!
+Now that you have a service up and running, you may think of code changes that you'd like to make to your Go service.  It would be a bottleneck for your development speed if you had to go through all of the same steps above every time you wanted to deploy a new feature to your service. That's where Continuous Integration and Continuous Delivery or CI/CD come in!
 
 In this module, you will create a fully managed CI/CD stack that will automatically deliver all of the code changes that you make to your code base to the service you created during the last module.  
 
@@ -295,7 +285,7 @@ aws codecommit create-repository --repository-name MythicalMysfitsService-Reposi
 
 #### Create a CodeBuild Project
 
-With a repository to store our code in, and an S3 bucket that will be used for our CI/CD artifacts, lets add to the CI/CD stack with a way for a service build to occur.  This will be accomplished by creating an **AWS CodeBuild Project**.  Any time a build execution is triggered, AWS CodeBuild will automatically provision a build server to our configuration and execute the steps required to build our docker image and push a new version of it to the ECR repository we created (and then spin the server down when the build is completed).  The steps for our build (which package our Python code and build/push the Docker container) are included in the `~/environment/aws-modern-application-workshop/module-2/app/buildspec.yml` file.  The **buildspec.yml** file is what you create to instruct CodeBuild what steps are required for a build execution within a CodeBuild project.
+With a repository to store our code in, and an S3 bucket that will be used for our CI/CD artifacts, lets add to the CI/CD stack with a way for a service build to occur.  This will be accomplished by creating an **AWS CodeBuild Project**.  Any time a build execution is triggered, AWS CodeBuild will automatically provision a build server to our configuration and execute the steps required to build our docker image and push a new version of it to the ECR repository we created (and then spin the server down when the build is completed).  The steps for our build (which package our Go code and build/push the Docker container) are included in the `~/environment/aws-modern-application-workshop/module-2/app/buildspec.yml` file.  The **buildspec.yml** file is what you create to instruct CodeBuild what steps are required for a build execution within a CodeBuild project.
 
 To create the CodeBuild project, another CLI input file is required to be updated with parameters specific to your resources. It is located at `~/environment/aws-modern-application-workshop/module-2/aws-cli/code-build-project.json`.  Similarly replace the values within this file as you have done before from the MythicalMysfitsCoreStackOutput. Once saved, execute the following with the CLI to create the project:
 
@@ -370,7 +360,7 @@ cp -r ~/environment/aws-modern-application-workshop/module-2/app/* ~/environment
 
 #### Pushing a Code Change
 
-Now the completed service code that we used to create our Fargate service in Module 2 is stored in the local repository that we just cloned from AWS CodeCommit.  Let's make a change to the Flask service before committing our changes, to demonstrate that the CI/CD pipeline we've created is working. In Cloud9, open the file stored at `~/environment/MythicalMysfitsService-Repository/service/mysfits-response.json` and change the age of one of the mysfits to another value and save the file.
+Now the completed service code that we used to create our Fargate service in Module 2 is stored in the local repository that we just cloned from AWS CodeCommit.  Let's make a change to the Go service before committing our changes, to demonstrate that the CI/CD pipeline we've created is working. In Cloud9, open the file stored at `~/environment/MythicalMysfitsService-Repository/service/mysfits-response.json` and change the age of one of the mysfits to another value and save the file.
 
 After saving the file, change directories to the new repository directory:
 
