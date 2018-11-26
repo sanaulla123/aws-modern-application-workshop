@@ -66,7 +66,7 @@ cd ~/environment/aws-modern-application-workshop/module-2/app
 * Then build the docker image, this will use the file in the current directory called Dockerfile that tells Docker all of the instructions that should take place when the build command is executed. Replace the contents in and the {braces} below with the appropriate information from the account/region you're working in:
 
 ```
-docker build -t aws-modern-application-workshop .
+docker build -t mythicalmysfits/service .
 ```
 
 You will see docker download and install all of the necessary dependency packages that our application needs, and output the tag for the built image.  Copy the image tag for later reference.
@@ -81,7 +81,7 @@ Successfully tagged aws-modern-application-workshop:latest
 Let's test our image locally within Cloud9 to make sure everything is operating as expected. Copy the image tag that resulted from the previous command and run the following command to deploy the container “locally” (which is actually within your Cloud9 IDE inside AWS!):
 
 ```
-docker run -p 8088:8088 -it --rm --name mythical-mysfits-service aws-modern-application-workshop
+docker run -p 8080:8080 -it --rm --name mythical-mysfits-service mythicalmysfits/service
 ```
 
 The server does not show any output by default,
@@ -89,7 +89,7 @@ but you can see that it's working by issuing the following `curl` command from a
 (Alt-T):
 
 ```
-curl http://localhost:8088/misfits
+curl http://localhost:8080/misfits
 ```
 
 You should see all of the misfits.
@@ -108,6 +108,17 @@ In order to push container images into our new repository, we will need to obtai
 
 ```
 $(aws ecr get-login --no-include-email)
+```
+
+Identify the image to push. Run the docker images command to list the images on your system.
+```
+docker images
+```
+You can identify an image with the repository:tag or the image ID in the resulting command output.
+Tag your image with the Amazon ECR registry, repository, and optional image tag name combination to use. The registry format is aws_account_id.dkr.ecr.region.amazonaws.com. The repository name should match the repository that you created for your image. If you omit the image tag, we assume the tag is latest.
+The following example tags an image with the ID e9ae3c220b23 as a111111111111.dkr.ecr.us-east-1.amazonaws.com/mythicalmysfits/service.
+```
+docker tag e9ae3c220b23 a111111111111.dkr.ecr.us-east-1.amazonaws.com/mythicalmysfits/service
 ```
 
 Next, push the image you created to the ECR repository using the copied tag from above. Using this command, docker will push your image and all the images it depends on to Amazon ECR:

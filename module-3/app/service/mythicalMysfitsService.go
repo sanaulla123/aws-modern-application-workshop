@@ -8,12 +8,12 @@ import (
     L "../client"
 )
 
-// For http://localhost:8088
+// For http://localhost:8080
 func healthCheckResponse(w http.ResponseWriter, req *http.Request) {
     w.Write([]byte("Nothing here, used for health check. Try /misfits instead."))
 }
 
-// Show mysfits-response.json for http://localhost:8088/misfits
+// Show mysfits-response.json for http://localhost:8080/misfits
 func showMisfits(w http.ResponseWriter, r *http.Request) {
     // Does request contain a 'filter' arg?, ala:
     // http://localhost:PORT/misfits?filter=value1&value=value2
@@ -65,7 +65,7 @@ func showMisfits(w http.ResponseWriter, r *http.Request) {
 
 // Defaults
 var DefaultFormat = "JSON"
-var DefaultPort = ":8088"
+var DefaultPort = ":8080"
 
 func main() {
     // Check environment

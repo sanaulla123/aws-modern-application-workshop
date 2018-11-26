@@ -14,7 +14,7 @@ import (
 // Get Mysfit info from service API
 func retrieveMysfit(mysfitId string) string {
     DefaultEndpoint := "http://localhost"
-    DefaultPort := ":8088"
+    DefaultPort := ":8080"
 
     // Check environment
     port := os.Getenv("PORT")

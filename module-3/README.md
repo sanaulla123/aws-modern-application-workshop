@@ -60,10 +60,10 @@ aws dynamodb scan --table-name MysfitsTable
 
 ### Committing The First *Real* Code change
 
-#### Copy the Updated Flask Service Code
-Now that we have our data included in the table, let's modify our application code to read from this table instead of returning the static JSON file that was used in Module 2.  We have included a new set of Python files for your Flask microservice, but now instead of reading the static JSON file will make a request to DynamoDB.
+#### Copy the Updated Go Service Code
+Now that we have our data included in the table, let's modify our application code to read from this table instead of returning the static JSON file that was used in Module 2.  We have included a new set of Go files for your Go microservice, but now instead of reading the static JSON file will make a request to DynamoDB.
 
-The request is formed using the AWS Python SDK called **boto3**. This SDK is a powerful yet simple way to interact with AWS services via Python code. It enables you to use service client definitions and functions that have great symmetry with the AWS APIs and CLI commands you've already been executing as part of this workshop.  Translating those commands to working Python code is simple when using **boto3**.  To copy the new files into your CodeCommit repository directory, execute the following command in the terminal:
+The request is formed using the AWS Go SDK. This SDK is a powerful yet simple way to interact with AWS services via Go code. It enables you to use service client definitions and functions that have great symmetry with the AWS APIs and CLI commands you've already been executing as part of this workshop.  Translating those commands to working Go code is simple when using the Go SDK.  To copy the new files into your CodeCommit repository directory, execute the following command in the terminal:
 
 ```
 cp ~/environment/aws-modern-application-workshop/module-3/app/service/* ~/environment/MythicalMysfitsService-Repository/service/
@@ -89,7 +89,7 @@ git commit -m "Add new integration to DynamoDB."
 git push
 ```
 
-Now, in just 5-10 minutes you'll see your code changes make it through your full CI/CD pipeline in CodePipeline and out to your deployed Flask service to AWS Fargate on Amazon ECS.  Feel free to explore the AWS CodePipeline console to see the changes progress through your pipeline.
+Now, in just 5-10 minutes you'll see your code changes make it through your full CI/CD pipeline in CodePipeline and out to your deployed Go service to AWS Fargate on Amazon ECS.  Feel free to explore the AWS CodePipeline console to see the changes progress through your pipeline.
 
 #### Update The Website Content in S3
 
