@@ -45,7 +45,12 @@ aws cloudformation describe-stacks --stack-name MythicalMysfitsCoreStack
 ```
 When in the `describe-stacks` response, you see a status of `CREATE_COMPLETE`, CloudFormation has finished provisioning all of the core networking and security resources described above.
 
-Once you see `CREATE_COMPLETE` in the `describe-stacks` response command above, copy the full response and save it for future reference in a text editor. Or, create a temporary folder and file to save it to within your IDE. This JSON response contains the unique identifiers for several of the created resources, which we will use later in this workshop.  
+Once you see `CREATE_COMPLETE` in the `describe-stacks` response command above, copy the full response and save it for future reference in a text editor. Or, create a temporary folder and file to save it to within your IDE. This JSON response contains the unique identifiers for several of the created resources, which we will use later in this workshop:
+
+* The ARN for the execution (ECS service) role
+* The ARN for the ECS task role
+* The two public subnet IDs
+
 
 ## Module 2a: Deploying a Service with AWS Fargate
 
@@ -89,10 +94,10 @@ but you can see that it's working by issuing the following `curl` command from a
 (Alt-T):
 
 ```
-curl http://localhost:8080/misfits
+curl http://localhost:8080/mysfits
 ```
 
-You should see all of the misfits.
+You should see all of the mysfits.
 
 
 #### Pushing the Docker Image to Amazon ECR
@@ -124,7 +129,7 @@ docker tag e9ae3c220b23 a111111111111.dkr.ecr.us-east-1.amazonaws.com/mythicalmy
 Next, push the image you created to the ECR repository using the copied tag from above. Using this command, docker will push your image and all the images it depends on to Amazon ECR:
 
 ```
-docker push aws-modern-application-workshop
+docker push a111111111111.dkr.ecr.us-east-1.amazonaws.com/mythicalmysfits/service
 ```
 
 Run the following command to see your newly pushed docker image stored inside the ECR repository:

@@ -27,7 +27,7 @@ func retrieveMysfit(mysfitId string) string {
         DefaultEndpoint = endpoint
     }
 
-    apiEndpoint := DefaultEndpoint + DefaultPort + "/misfits?filter=MysfitId&value=" + mysfitId // eg: https://ljqomqjzbf.execute-api.us-east-1.amazonaws.com/prod/
+    apiEndpoint := DefaultEndpoint + DefaultPort + "/mysfits?filter=MysfitId&value=" + mysfitId // eg: https://ljqomqjzbf.execute-api.us-east-1.amazonaws.com/prod/
 
     resp, err := http.Get(apiEndpoint)
     if err != nil {
