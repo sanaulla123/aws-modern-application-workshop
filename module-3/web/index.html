@@ -13,9 +13,9 @@
   <body ng-app="mysfitsApp">
     <style>
       @media (max-width: 800px) {
-      	img {
+        img {
           max-width: 300px;
-      	}
+        }
       }
     </style>
     <br>
@@ -70,7 +70,7 @@
   </body>
   <script>
 
-    var mysfitsApiEndpoint = 'REPLACE_ME';
+    var mysfitsApiEndpoint = 'http:/mysfits-nlb-a1234b1234c1234d.elb.REGION.amazonaws.com';
 
     var app = angular.module('mysfitsApp', []);
 
@@ -82,7 +82,6 @@
     });
 
     app.controller('mysfitsFilterController', function($scope) {
-
       filterScope = $scope;
 
       // The possible options for Mysfits to populate the dropdown filters.
@@ -107,43 +106,43 @@
            }
          ]
        };
+       
+       var allMysfits;
 
        $scope.removeFilter = function() {
          allMysfits = getAllMysfits(applyGridScope);
        }
 
        $scope.queryMysfits = function(filterCategory, filterValue) {
-
            var filterCategoryQS = "";
+           
            if (filterCategory==="Good/Evil") {
              filterCategoryQS = "GoodEvil";
            } else {
              filterCategoryQS = "LawChaos"
            }
-           var mysfitsApi = mysfitsApiEndpoint + '/mysfits?' + 'filter=' + filterCategoryQS + "&value=" + filterValue;
+           
+           var mysfitsApi = mysfitsApiEndpoint + '/misfits?' + 'filter=' + filterCategoryQS + "&value=" + filterValue;
 
            $.ajax({
              url : mysfitsApi,
              type : 'GET',
+             crossDomain : true,
+             dataType : "json",
              success : function(response) {
                applyGridScope(response.mysfits)
              },
              error : function(response) {
-               console.log("could not retrieve mysfits list.");
+               console.log("Could not retrieve Mysfits where " + filterCategory + " is " + filterValue + " from " + mysfitsApi);
              }
            });
        }
-
-
-
     });
 
     app.controller('mysfitsListController', function($scope) {
-
       gridScope = $scope;
 
       getAllMysfits(applyGridScope);
-
     });
 
     function applyGridScope(mysfitsList) {
@@ -152,21 +151,21 @@
     }
 
     function getAllMysfits(callback) {
-
-      var mysfitsApi = mysfitsApiEndpoint + '/mysfits';
+      var mysfitsApi = mysfitsApiEndpoint + '/misfits';
 
       $.ajax({
         url : mysfitsApi,
         type : 'GET',
+        crossDomain : true,
+        dataType : "json",
         success : function(response) {
           callback(response.mysfits);
         },
         error : function(response) {
-          console.log("could not retrieve mysfits list.");
+          console.log("Could not retrieve all Mysfits from " + mysfitsApi);
         }
       });
     }
-
 
   </script>
 </html>
