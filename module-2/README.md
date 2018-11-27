@@ -62,23 +62,23 @@ All of the code required to run our service backend is stored within the `/modul
 
 Docker comes already installed on the Cloud9 IDE that you've created, so in order to build the docker image locally, all we need to do is run the following commands in the Cloud9 terminal:
 
-* First change directory to `~/environment/module-2/app`
+* Navigate to `~/environment/module-2/app`
 
 ```
 cd ~/environment/aws-modern-application-workshop/module-2/app
 ```
 
-* Then build the docker image, this will use the file in the current directory called Dockerfile that tells Docker all of the instructions that should take place when the build command is executed. Replace the contents in and the {braces} below with the appropriate information from the account/region you're working in:
+* Build the docker image using the file *Dockerfile* in the current directory. This file contains instructions for Docker to run when the build command is executed:
 
 ```
 docker build -t mythicalmysfits/service .
 ```
 
-You will see docker download and install all of the necessary dependency packages that our application needs, and output the tag for the built image.  Copy the image tag for later reference.
+Docker downloads and installs all of the necessary dependency packages that the application needs, and outputs the tag for the built image. Copy the image tag for later reference.
 
 ```
 Successfully built xxxxxxxxxxxx
-Successfully tagged aws-modern-application-workshop:latest
+Successfully tagged mythicalmysfits/service:latest
 ```
 
 ### Testing the Service Locally
@@ -375,17 +375,20 @@ This will tell us that our repository is empty!  Let's fix that by copying the a
 cp -r ~/environment/aws-modern-application-workshop/module-2/app/* ~/environment/MythicalMysfitsService-Repository/
 ```
 
+Check in the new code:
+
+```
+cd ~/environment/MythicalMysfitsService-Repository/
+git add .
+git commit -m "Initial code from module-2"
+git push
+```
+
 #### Pushing a Code Change
 
 Now the completed service code that we used to create our Fargate service in Module 2 is stored in the local repository that we just cloned from AWS CodeCommit.  Let's make a change to the Go service before committing our changes, to demonstrate that the CI/CD pipeline we've created is working. In Cloud9, open the file stored at `~/environment/MythicalMysfitsService-Repository/service/mysfits-response.json` and change the age of one of the mysfits to another value and save the file.
 
-After saving the file, change directories to the new repository directory:
-
-```
-cd ~/environment/MythicalMysfitsService-Repository/
-```
-
-Then, run the following git commands to push in your code changes.  
+Push the code change:
 
 ```
 git add .

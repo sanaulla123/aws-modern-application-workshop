@@ -1,4 +1,4 @@
-package client
+package main
 
 import (
 	"strconv"
@@ -329,29 +329,4 @@ func QueryMysfits(filter string, value string) string {
 	output := getStringFromItems(result.Items)
 
 	return output
-}
-
-// To test from command line change this and the top package name to main
-func dummy() {
-	filterPtr := flag.String("filter", "", "The table attribute to query")
-	valuePtr := flag.String("value", "", "The value of the table attribute")
-	flag.Parse()
-	filter := *filterPtr
-	value := *valuePtr
-
-	var output string
-
-	// Initialize logging
-	Init(os.Stderr, JSON)
-
-	if filter != "" && value != "" {
-		fmt.Println("Getting filtered values")
-		output = QueryMysfits(filter, value)
-	} else {
-		fmt.Println("Getting all values")
-		output = GetAllMysfits()
-	}
-
-	// Convert []byte to string
-	fmt.Print(output)
 }
