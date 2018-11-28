@@ -153,6 +153,8 @@ Now, lets copy these HTML files, as well as the Cognito JavaScript SDK to the S3
 aws s3 cp --recursive ~/environment/aws-modern-application-workshop/module-4/web/ s3://YOUR-S3-BUCKET/
 ```
 
+<!-- I get a "Missing Authentication Token" error when I: -->
+
 Refresh the Mythical Mysfits website in your browser to see the new functionality in action!
 
 This concludes Module 4.
