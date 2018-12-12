@@ -133,8 +133,8 @@ Did you run into any issues? **If not, go back to Lab 1 and make sure git secret
 
 Looks like someone put in some secrets to our application. We should never have any sort of secrets directly built into the application. We have to fix this. This is the output you should have seen:
 
+
 <pre>
-service/mysfits_like.py:19:    # Boy I hope someone finds me: AKIAIOSFODNN7EXAMPLS
 
 [ERROR] Matched one or more prohibited patterns
 
